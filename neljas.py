@@ -6,7 +6,7 @@ from kivymd.uix.pickers import MDTimePicker
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.clock import Clock
 import datetime
-Window.size = (350, 600)
+Window.size = (750, 600)
 
 
 KV = '''
@@ -45,7 +45,7 @@ ScreenManager:
             on_release: app.switch_screen('menu')
             
         MDLabel:
-            text: "Hommikusöök kell 7-9"
+            text: "Hommikusöök:  kohale jõudmine:"
             font_size: "15sp"
             pos_hint: {"center_y": .935}
             halign: "center"
@@ -82,7 +82,7 @@ ScreenManager:
             text_color: 1, 1, 1, 1
             on_release: app.switch_screen('menu')
         MDLabel:
-            text: "Hommikusöök kell 7-8"
+            text: "Hommikusöök: kohale jõudmine:"
             font_size: "15sp"
             pos_hint: {"center_y": .935}
             halign: "center"
@@ -155,7 +155,7 @@ class Alarm(MDApp):
             print(self.volume)
         else:
             self.sound.set_volume(1)
-            print("Jõuidsin max voluumini!")
+            
     def start(self, *args):
         self.sound.play(-1)
         self.set_volume

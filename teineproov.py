@@ -5,7 +5,7 @@ from kivy.core.window import Window
 from kivymd.uix.pickers import MDTimePicker
 from kivy.clock import Clock
 import datetime
-Window.size = (350, 600)
+Window.size = (750, 600)
 
 
 KV = '''

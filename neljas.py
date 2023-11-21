@@ -59,7 +59,7 @@ ScreenManager:
             text_color: 1, 1, 1, 1
             on_release: app.time_picker()
         MDLabel:
-            id: alarm_time_1
+            id: alarm_time
             text: ""
             pos_hint: {"center_y": .5}
             halign: "center"
@@ -96,7 +96,7 @@ ScreenManager:
             text_color: 1, 1, 1, 1
             on_release: app.time_picker()
         MDLabel:
-            id: alarm_time_2
+            id: alarm_time
             text: ""
             pos_hint: {"center_y": .5}
             halign: "center"
@@ -139,20 +139,14 @@ class Alarm(MDApp):
     def schedule(self, *args):
         Clock.schedule_once(self.alarm, 1)
 
-    def alarm1(self, *args):
+    def alarm(self, *args):
         while True:
             current_time = datetime.datetime.now().strftime("%H:%M:%S")
-            if self.root.ids.alarm_time_1.text == str(current_time):
+            if self.root.ids.alarm_time.text == str(current_time):
                 print("Alarm!")
                 self.start()
                 break
-    def alarm2(self, *args):
-        while True:
-            current_time = datetime.datetime.now().strftime("%H:%M:%S")
-            if self.root.ids.alarm_time_2.text == str(current_time):
-                print("Alarm!")
-                self.start()
-                break
+    
     def set_volume(self, *args):
         self.volume += 0.05
         if self.volume < 1.0:
@@ -172,11 +166,7 @@ class Alarm(MDApp):
         self.volume = 0 
 
     def get_time(self, instance, time):
-        current_screen = self.root.current_screen
-        if self.root.current == 'alarm1':
-            self.root.ids.alarm_time_1.text = str(time)
-        elif self.root.current == 'alarm2':
-            self.root.ids.alarm_time_2.text = str(time)
+        self.root.ids.alarm_time.text = str(time)
 
     def switch_screen(self, screen_name):
         self.root.current = screen_name

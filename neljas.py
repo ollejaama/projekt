@@ -143,7 +143,6 @@ class Alarm(MDApp):
         while True:
             current_time = datetime.datetime.now().strftime("%H:%M:%S")
             if self.root.ids.alarm_time.text == str(current_time):
-                print("Alarm!")
                 self.start()
                 break
     
@@ -158,7 +157,7 @@ class Alarm(MDApp):
             
     def start(self, *args):
         self.sound.play(-1)
-        self.set_volume
+        self.set_volume()
 
     def stop(self):
         self.sound.stop()

@@ -3,119 +3,50 @@ from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivy.core.window import Window
 from kivymd.uix.pickers import MDTimePicker
-from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.clock import Clock
 import datetime
+Window.size = (750, 600)
 
-Window.size = (350, 600)
 
 KV = '''
-ScreenManager:
-    MenuScreen:
-    AlarmScreen1:
-    AlarmScreen2:
 
-<MenuScreen>:
-    name: 'menu'
-    MDFloatLayout:
-        md_bg_color: 1, 1, 1, 1
-        MDRectangleFlatButton:
-            text: 'Tallink'
-            pos_hint: {"center_x": .5, "center_y": .6}
-            on_release: root.manager.current = 'alarm1'
-
-        MDRectangleFlatButton:
-            text: 'DFDS'
-            pos_hint: {"center_x": .5, "center_y": .4}
-            on_release: root.manager.current = 'alarm2'
-
-<AlarmScreen1>:
-    name: 'alarm1'
-    MDFloatLayout:
-        md_bg_color: 1, 1, 1, 1
-        MDToolbar:
-            title: 'Tallink'
-            left_action_items: [['arrow-left', lambda x: app.switch_screen('menu')]]
-        MDLabel:
-            text: "Hommikusöök kell 7-9"
-            font_size: "15sp"
-            pos_hint: {"center_y": .9}
-            halign: "center"
-            bold: False
-        MDIconButton:
-            icon: "plus"
-            pos_hint: {"center_x": .87, "center_y": .94}
-            md_bg_color: 0, 0, 0, 1
-            theme_text_color: "Custom"
-            text_color: 1, 1, 1, 1
-            on_release: app.time_picker()
-        MDLabel:
-            id: alarm_time
-            text: ""
-            pos_hint: {"center_y": .5}
-            halign: "center"
-            font_size: "30sp"
-            bold: True
-        MDRaisedButton:
-            text: "Stop"
-            pos_hint: {"center_x": .5, "center_y": .4}
-            on_release: app.stop()
-
-<AlarmScreen2>:
-    name: 'alarm2'
-    MDFloatLayout:
-        md_bg_color: 1, 1, 1, 1
-        MDToolbar:
-            title: 'DFDS'
-            left_action_items: [['arrow-left', lambda x: app.switch_screen('menu')]]
-        MDLabel:
-            text: "Hommikusöök kell 7-8"
-            font_size: "15sp"
-            pos_hint: {"center_y": .9}
-            halign: "center"
-            bold: False
-        MDIconButton:
-            icon: "plus"
-            pos_hint: {"center_x": .87, "center_y": .94}
-            md_bg_color: 0, 0, 0, 1
-            theme_text_color: "Custom"
-            text_color: 1, 1, 1, 1
-            on_release: app.time_picker()
-        MDLabel:
-            id: alarm_time
-            text: ""
-            pos_hint: {"center_y": .5}
-            halign: "center"
-            font_size: "30sp"
-            bold: True
-        MDRaisedButton:
-            text: "Stop"
-            pos_hint: {"center_x": .5, "center_y": .4}
-            on_release: app.stop()
+MDFloatLayout:
+    md_bg_color: 1, 1, 1, 1
+    MDLabel:
+        text: "ALARM"
+        font_size: "30sp"
+        pos_hint: {"center_y": .935}
+        halign: "center"
+        bold: True
+    MDIconButton:
+        icon: "plus"
+        pos_hint: {"center_x": .87, "center_y": .94}
+        md_bg_color: 0, 0, 0, 1
+        theme_text_color: "Custom"
+        text_color: 1, 1, 1, 1
+        on_release: app.time_picker()
+    MDLabel:
+        id: alarm_time
+        text: ""
+        pos_hint: {"center_y": .5}
+        halign: "center"
+        font_size: "30sp"
+        bold: True
+    MDRaisedButton:
+        text: "Lõpeta"
+        pos_hint: {"center_x": .5, "center_y": .4}
+        on_release: app.stop()
 '''
 
-class MenuScreen(Screen):
-    def rickroll(self):
-        print("You've been rickrolled!")
-
-class AlarmScreen1(Screen):
-    def on_enter(self):
-        app = MDApp.get_running_app()
-        app.stop()
-
-class AlarmScreen2(Screen):
-    def on_enter(self):
-        app = MDApp.get_running_app()
-        app.stop()
-
 class Alarm(MDApp):
+   
+
     pygame.init()
     sound = pygame.mixer.Sound("alarm.mp3")
-    volume = 0
-
+    volume = 1
     def build(self):
         return Builder.load_string(KV)
-
+    
     def time_picker(self):
         time_dialog = MDTimePicker()
         time_dialog.bind(time=self.get_time, on_save=self.schedule)
@@ -131,31 +62,18 @@ class Alarm(MDApp):
                 print("Alarm!")
                 self.start()
                 break
-
-    def set_volume(self, *args):
-        self.volume += 0.05
-        if self.volume < 1.0:
-            Clock.schedule_interval(self.set_volume, 10)
-            self.sound.set_volume(self.volume)
-            print(self.volume)
-        else:
-            self.sound.set_volume(1)
-            print("Jõuidsin max voluumini!")
-
+    
     def start(self, *args):
         self.sound.play(-1)
-        self.set_volume()
+        
 
     def stop(self):
         self.sound.stop()
-        Clock.unschedule(self.set_volume)
-        self.volume = 0
+        self.volume = 0 
 
     def get_time(self, instance, time):
         self.root.ids.alarm_time.text = str(time)
 
-    def switch_screen(self, screen_name):
-        self.root.current = screen_name
+    
 
-if __name__ == '__main__':
-    Alarm().run()
+Alarm().run()

@@ -58,7 +58,6 @@ class Alarm(MDApp):
         while True:
             current_time = datetime.datetime.now().strftime("%H:%M:%S")
             if self.root.ids.alarm_time.text == str(current_time):
-                print("Alarm!")
                 self.start()
                 break
     def set_volume(self, *args):

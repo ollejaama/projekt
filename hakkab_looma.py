@@ -38,22 +38,18 @@ MDFloatLayout:
         md_bg_color: 0, 0, 0, 0
         theme_text_color: "Custom"
         text_color: 1, 1, 1, 1
-            
     MDLabel:
         id: alarm_time
         text: ""
         pos_hint: {"center_y": .5}
         halign: "center"
         font_size: "30sp"
-        bold: True
+            
     MDRaisedButton:
         text: "Lõpeta"
         pos_hint: {"center_x": .5, "center_y": .4}
         on_release: app.stop()
-    MDRaisedButton:
-        text: "Lõpeta2"
-        pos_hint: {"center_x": .5, "center_y": .2}
-        on_release: app.stop()
+    
 '''
 
 class Alarm(MDApp):
@@ -62,6 +58,7 @@ class Alarm(MDApp):
     sound = pygame.mixer.Sound("alarm.mp3")
     volume = 1
     alarm_scheduled = None  # Variable to store scheduled alarm event
+    alarm = None  # Variable to store the selected alarm time
 
     def build(self):
         return Builder.load_string(KV)
@@ -72,27 +69,31 @@ class Alarm(MDApp):
         time_dialog.open()
 
     def schedule(self, *args):
-    # Cancel any previous scheduled alarm event
+        # Cancel any previous scheduled alarm event
         if self.alarm_scheduled:
             Clock.unschedule(self.alarm_scheduled)
 
         # Get the selected alarm time
-        alarm_time_str = self.root.ids.alarm_time.text
-        print(alarm_time_str)
-        #alarm_time_str = "mongol"
+        if isinstance(self.alarm, str):
+            alarmi_str = self.alarm
+            
+        
+            alarmi_aeg = datetime.datetime.strptime(alarmi_str, "%H:%M:%S")
 
-        alarm_time = datetime.datetime.strptime(alarm_time_str, "%H:%M:%S")
-        
-        # Get the current time
-        current_time = datetime.datetime.now()
-       
-        # Calculate the time until the next alarm using modular arithmetic
-        time_difference = (alarm_time - current_time).total_seconds()
-        
-        time_difference = time_difference % (24 * 3600)   # Ensure the time difference is within a 24-hour period
-        
-        self.alarm_scheduled = Clock.schedule_once(self.start, time_difference)
-        
+            # Get the current time
+            current_time = datetime.datetime.now()
+
+            # Calculate the time until the next alarm using modular arithmetic
+            time_difference = (alarmi_aeg - current_time).total_seconds()
+
+            time_difference = time_difference % (24 * 3600)   # Ensure the time difference is within a 24-hour period
+
+            self.alarm_scheduled = Clock.schedule_once(self.start, time_difference)
+            self.root.ids.alarm_time.text = alarmi_str
+        else:
+            # If no time is selected, return to the main page
+            self.root.ids.alarm_time.text = "vali aeg, põmmpea"
+            print("l")
 
     def alarm(self, *args):
         self.start()
@@ -104,14 +105,15 @@ class Alarm(MDApp):
         # Cancel any scheduled alarm event
         if self.alarm_scheduled:
             Clock.unschedule(self.alarm_scheduled)
-                                                    
+
         self.sound.stop()
         self.volume = 0
+        self.alarm = None  # Reset selected alarm time
         self.root.ids.alarm_time.text = "taun oled"
         
 
     def get_time(self, instance, time):
-        self.root.ids.alarm_time.text = str(time)
+        self.alarm = str(time)
+        
 
 Alarm().run()
-

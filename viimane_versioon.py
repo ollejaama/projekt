@@ -307,8 +307,8 @@ class Alarm(MDApp):
     pygame.init()
     sound = pygame.mixer.Sound("alarm.mp3")
     volume = 1
-    alarm_scheduled = None  # Variable to store scheduled alarm event
-    alarm = None  # Variable to store the selected alarm time
+    alarm_scheduled = None  # Planeeritud alarmi sündmuse muutuja
+    alarm = None  # Valitud alarmiaja muutuja
 
     def build(self):
         return Builder.load_string(KV)
@@ -319,24 +319,24 @@ class Alarm(MDApp):
         time_dialog.open()
 
     def schedule(self, *args):
-        # Cancel any previous scheduled alarm event
+        # Katkestab eelnevad pandud alarmid
         if self.alarm_scheduled:
             Clock.unschedule(self.alarm_scheduled)
 
-        # Get the selected alarm time
+        # Võtab valitud alarmiaja
         if isinstance(self.alarm, str):
             alarmi_str = self.alarm
             
         
             alarmi_aeg = datetime.datetime.strptime(alarmi_str, "%H:%M:%S")
 
-            # Get the current time
+            # Leiab praeguse aja
             current_time = datetime.datetime.now()
 
-            # Calculate the time until the next alarm using modular arithmetic
+            # Arvutab aja järgmise alarmini
             time_difference = (alarmi_aeg - current_time).total_seconds()
 
-            time_difference = time_difference % (24 * 3600)   # Ensure the time difference is within a 24-hour period
+            time_difference = time_difference % (24 * 3600)   # Teeb kindlaks, et aeg oleks 24-h periood
             current_screen = self.root.current_screen
             if current_screen.name == 'alarm1':
                 aeg = time_difference + 3600
@@ -359,7 +359,7 @@ class Alarm(MDApp):
             elif current_screen.name == 'alarm4':
                 current_screen.ids.alarm_time4.text = alarmi_str
         else:
-            # If no time is selected, return to the main page
+            # Kui aega ei ole valitud, siis mine tagasi põhilehele
             current_screen = self.root.current_screen
             if current_screen.name == 'alarm1':
                 current_screen.ids.alarm_time.text = "vali aeg, põmmpea"
@@ -379,13 +379,13 @@ class Alarm(MDApp):
         self.sound.play(-1)
 
     def stop(self):
-        # Cancel any scheduled alarm event
+        # Katkestab planeeritud alarmid
         if self.alarm_scheduled:
             Clock.unschedule(self.alarm_scheduled)
 
         self.sound.stop()
         self.volume = 0
-        self.alarm = None  # Reset selected alarm time
+        self.alarm = None  # resettib valitud alarmiaja
         
         current_screen = self.root.current_screen
         

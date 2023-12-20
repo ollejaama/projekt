@@ -1,3 +1,3 @@
 ﻿# projekt
 
-Olle Ilmar Jaama ja Aksel Kaasiku app.
+Olle Ilmar Jaama ja Aksel Kaasiku äpp.
